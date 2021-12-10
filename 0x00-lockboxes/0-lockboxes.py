@@ -9,6 +9,8 @@ def canUnlockAll(boxes):
     """
     Function that determines if all the boxes can be opened.
     """
+    if type(boxes) is not list:
+        return False
     elif (len(boxes)) == 0:
         return False
     for key in range(1, len(boxes) - 1):
