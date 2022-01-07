@@ -9,7 +9,7 @@ def minOperations(n):
     my_list = []
     index = 1
     while (n != 1):
-        index = index + 1
+        index += 1
         if n % index == 0:
             while n % index == 0:
                 n /= index
