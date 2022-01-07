@@ -1,16 +1,17 @@
 #!/usr/bin/python3
-""" Script for minimum operations
+""" Minimum operations
 """
+
 
 def minOperations(n):
     """
-    Minimum Operations
+    Minimum number
     """
-    if (n < 2):
+    if n < 2:
         return 0
     my_list = []
     index = 1
-    while (n != 1):
+    while n != 1:
         index += 1
         if n % index == 0:
             while n % index == 0:
