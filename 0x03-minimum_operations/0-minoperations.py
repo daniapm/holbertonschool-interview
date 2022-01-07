@@ -14,5 +14,4 @@ def minOperations(n):
             while n % index == 0:
                 n /= i
                 my_list.append(index)
-            result = sum(my_list)
-    return result
+    return sum(my_list)
