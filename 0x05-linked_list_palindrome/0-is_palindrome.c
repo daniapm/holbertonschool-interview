@@ -11,10 +11,10 @@
 int isPalindromeUtil(listint_t **left, listint_t *right)
 {
 
+	int isTrue;
+
 	if (right == NULL)
 		return (1);
-	
-	int isTrue;
 
 	isTrue = isPalindromeUtil(left, right->next);
 
