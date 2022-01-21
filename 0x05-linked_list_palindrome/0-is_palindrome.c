@@ -28,26 +28,18 @@ int isPalindromeUtil(listint_t **left, listint_t *right)
 {
 
 	if (right == NULL)
-    {
         return (1);
-    }
 
     int isTrue;
 	isTrue = isPalindromeUtil(left, right->next);
 
 	if (isTrue == 0)
-    {
-		return (0);
-    }
+        return (0);
 
 	if ((*left)->n == end->n)
-    {
         isTrue = 1;
-    }
 	else
-    {
         isTrue = 0;
-    }
 
 	*right = (*left)->next;
 
