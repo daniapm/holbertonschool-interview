@@ -7,6 +7,7 @@
  *
  * Return: Either 0 or 1 depending if is a palindrome
  */
+
 int isPalindromeUtil(listint_t **left, listint_t *right)
 {
 
@@ -36,6 +37,7 @@ int isPalindromeUtil(listint_t **left, listint_t *right)
  *
  * Return: 0 if it is not a palindrome, 1 if it is a palindrome
  */
+
 int is_palindrome(listint_t **head)
 {
 	listint_t **left = head;
