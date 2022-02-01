@@ -1,47 +1,43 @@
 #!/usr/bin/python3
-"""
-Write a script that reads stdin line by line and computes metrics
-"""
-from sys import stdin
+""" Script that reads stdin line by line and computes metrics """
 
+if __name__ == '__main__':
 
-def printstats(file_size, status_codes):
-    """
-    prints statistics
-    """
-    print("File size: " + str(file_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print(code + ": " + str(status_codes[code]))
+    import sys
 
+    def print_results(statusCodes, fileSize):
+        """ Print metrics """
+        print("File size: {:d}".format(fileSize))
+        for statusCode, times in sorted(statusCodes.items()):
+            if times:
+                print("{:s}: {:d}".format(statusCode, times))
 
-line_num = 0
-file_size = 0
-status_code = 0
-status_codes = {"200": 0, "301": 0, "400": 0, "401": 0,
-                "403": 0, "404": 0, "405": 0, "500": 0}
+    statusCodes = {"200": 0,
+                   "301": 0,
+                   "400": 0,
+                   "401": 0,
+                   "403": 0,
+                   "404": 0,
+                   "405": 0,
+                   "500": 0
+                   }
+    fileSize = 0
+    n_lines = 0
 
-try:
-    for line in stdin:
-        line_num += 1
-        split_line = line.split()
-
-        if len(split_line) > 1:
-            file_size += int(split_line[-1])
-
-        if len(split_line) > 2 and split_line[-2].isnumeric():
-            status_code = split_line[-2]
-        else:
-            status_code = 0
-
-        if status_code in status_codes.keys():
-            status_codes[status_code] += 1
-
-        if line_num % 10 == 0:
-            printstats(file_size, status_codes)
-
-    printstats(file_size, status_codes)
-
-except (KeyboardInterrupt):
-    printstats(file_size, status_codes)
-    raise
+    try:
+        for line in sys.stdin:
+            if n_lines != 0 and n_lines % 10 == 0:
+                print_results(statusCodes, fileSize)
+            n_lines += 1
+            data = line.split()
+            try:
+                statusCode = data[-2]
+                if statusCode in statusCodes:
+                    statusCodes[statusCode] += 1
+                fileSize += int(data[-1])
+            except:
+                pass
+        print_results(statusCodes, fileSize)
+    except KeyboardInterrupt:
+        print_results(statusCodes, fileSize)
+        raise
