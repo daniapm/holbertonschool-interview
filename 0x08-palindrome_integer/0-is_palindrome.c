@@ -1,7 +1,7 @@
 #include "palindrome.h"
 
 /**
- * is_palindrome - function that checks whether or not a given unsigned integer is a palindrome
+ * is_palindrome - checks whether or not a given unsigned integer is a palindrome
  * @n:  The number to be checked
  *
  * Return: returns 1 if palindrome, 0 otherwise.
@@ -9,16 +9,19 @@
 
 int is_palindrome(unsigned long n)
 {
-	unsigned long temp = n, reverse-number = 0;
-	int rem = 0;
+	int tmp, num, prod = 0;
 
-	while (n != 0)
+	for (num = n; n != 0; n = n / 10)
 	{
-		rem = n % 10;
-		reverseNumber = reverseNumber * 10 + rem;
-		n = n / 10;
+		tmp = n % 10;
+		prod = prod * 10 + tmp;
 	}
-	if (temp == reverseNumber)
+	if (num == prod)
+	{
 		return (1);
-	return (0);
+	}
+	else
+	{
+		return (0);
+	}
 }
