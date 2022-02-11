@@ -1,9 +1,10 @@
 #ifndef PALINDROME
 #define PALINDROME
 
-#include <stdlib.h>
 
+#include <stdio.h>
+#include <stdlib.h>
 
 int is_palindrome(unsigned long n);
 
-#endif /* PALINDROME */
+#endif
