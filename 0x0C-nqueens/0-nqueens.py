@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-""" The N queens puzzle is the challenge of placing N non-attacking queens on an N × N chessboard
-"""
 import sys
 
 if len(sys.argv) != 2:
