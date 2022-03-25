@@ -43,22 +43,19 @@ avl_t *binary_tree(int *array, int first, int last, avl_t **header)
 
 	new_node = malloc(sizeof(avl_t));
 
-	if (new_node == NULL) {
+	if (new_node == NULL)
 		return (NULL);
-    }
 
 	new_node->n = array[current];
 	new_node->parent = NULL;
 	new_node->left = left;
 	new_node->right = right;
 
-	if (left != NULL) {
+	if (left != NULL)
 		left->parent = new_node;
-    }
 
-	if (right != NULL) {
+	if (right != NULL)
 		right->parent = new_node;
-    }
 
 	*header = new_node;
 	return (new_node);
