@@ -13,20 +13,20 @@ avl_t *sorted_array_to_avl(int *array, size_t size)
 		return (NULL);
     }
 
-	if (binary_tree(array, 0, (int)size - 1, &header) == NULL) {
+	if (nodes_binary(array, 0, (int)size - 1, &header) == NULL) {
 		return (NULL);
     }
 	return (header);
 }
 /**
- * binary_tree - create binary tree
+ * nodes_binary - create binary tree
  * @array: pointer to the first element of the array to be converted
  * @first: initial
  * @last: final
  * @header: header node
  * Return: new node
  */
-avl_t *binary_tree(int *array, int first, int last, avl_t **header)
+avl_t *nodes_binary(int *array, int first, int last, avl_t **header)
 {
 	avl_t *new_node = NULL, *left = NULL, *right = NULL;
 
