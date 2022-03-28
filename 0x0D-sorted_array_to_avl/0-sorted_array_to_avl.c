@@ -9,13 +9,11 @@ avl_t *sorted_array_to_avl(int *array, size_t size)
 {
 	avl_t *header = NULL;
 
-	if (array == NULL) {
+	if (array == NULL)
 		return (NULL);
-    }
 
-	if (nodes_binary(array, 0, (int)size - 1, &header) == NULL) {
+	if (nodes_binary(array, 0, (int)size - 1, &header) == NULL)
 		return (NULL);
-    }
 	return (header);
 }
 /**
@@ -29,12 +27,10 @@ avl_t *sorted_array_to_avl(int *array, size_t size)
 avl_t *nodes_binary(int *array, int first, int last, avl_t **header)
 {
 	avl_t *new_node = NULL, *left = NULL, *right = NULL;
-
 	int current;
 
-	if (first > last) {
+	if (first > last)
 		return (NULL);
-    }
 
 	current = (last + first) / 2;
 
@@ -42,7 +38,6 @@ avl_t *nodes_binary(int *array, int first, int last, avl_t **header)
 	nodes_binary(array, current + 1, last, &right);
 
 	new_node = malloc(sizeof(avl_t));
-
 	if (new_node == NULL)
 		return (NULL);
 
