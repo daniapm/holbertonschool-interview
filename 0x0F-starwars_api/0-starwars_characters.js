@@ -2,22 +2,30 @@
 
 const request = require('request');
 
-const id = process.argv[2] + '/';
+async function starwars (id) {
+  const url = `https://swapi-api.hbtn.io/api/films/${id}`;
 
-const myUrl = 'https://swapi-api.hbtn.io/api/films/';
+  request(url, async function (err, response, body) {
+    if (err) return console.log(err);
+    const charList = JSON.parse(body).characters;
 
-request(myUrl + id, async function (err, res, body) {
-  if (err) return console.error(err);
+    for (const chatUrl of charList) {
+        const ret = () => {
+            return new Promise((resolve, reject) => {
+                request(chatUrl, function (err, response, body) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    resolve(JSON.parse(body).name);
+                }
+            });
+          });
+        };
+        console.log(await ret());
+      }
+  });
+}
 
-  const urlList = JSON.parse(body).characters;
-
-  for (const urlchar of urlList) {
-    await new Promise(function (resolve, reject) {
-      request(urlchar, function (err, res, body) {
-        if (err) return console.error(err);
-        console.log(JSON.parse(body).name);
-        resolve();
-      });
-    });
-  }
-});
+if (process.argv.length === 3) {
+    starwars(process.argv[2]);
+}
