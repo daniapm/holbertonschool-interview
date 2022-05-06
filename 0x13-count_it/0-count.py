@@ -1,21 +1,20 @@
 #!/usr/bin/python3
 """
-Count it!
+Reddit API Model
 """
 import requests
 
 
-def count_words(subreddit, word_list, result={}, after=""):
+def count_words(subreddit, word_list, count={}, after=""):
     """
-    recursive function that queries the Reddit API, parses the title of
-    all hot articles, and prints a sorted count of given keywords
+    Parses the title of all hot articles
     """
-    if len(result) <= 0:
-        for title in word_list:
-            result[title] = 0
+    if len(count) <= 0:
+        for item in word_list:
+            count[item] = 0
 
     if after is None:
-        word_list = [[key, value] for key, value in result.items()]
+        word_list = [[key, value] for key, value in count.items()]
         word_list = sorted(word_list, key=lambda x: (-x[1], x[0]))
         for k in word_list:
             if k[1]:
@@ -39,7 +38,7 @@ def count_words(subreddit, word_list, result={}, after=""):
                 "title")
             lower = [s.lower() for s in title.split(' ')]
             for word in word_list:
-                result[word] += lower.result(word.lower())
+                count[word] += lower.count(word.lower())
     else:
         return None
-    count_words(subreddit, word_list, result, after)
+    count_words(subreddit, word_list, count, after)
