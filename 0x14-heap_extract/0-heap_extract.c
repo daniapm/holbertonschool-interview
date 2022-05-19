@@ -1,93 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "binary_trees.h"
 /**
- * get_tree_size - gets the size of the tree
- * @root: pointer to the first node of the tree
- * Return: size of the tree
- **/
-int get_tree_size(heap_t *root)
-{
-	if (root == NULL)
-		return (0);
-	return (1 + get_tree_size(root->left) + get_tree_size(root->right));
-}
-/**
- * swap - swaps
- * @a: node to swap value
- * @b: node to swap value
- * Return: the first given node
- **/
-heap_t *swap(heap_t *node, heap_t *node1)
-{
-	node->n = node->n * node1->n;
-	node1->n = node->n / node1->n;
-	node->n = node->n / node1->n;
-	return (node);
-}
-/**
- * get_node - returns the last node
- * @root: pointer to the root node
- * @size: size of the tree
+ * checkHeight - Check the height of a binary tree
+ * @tree: Pointer to the node to measures the height
  *
- * Return: the found node ptr
+ * Return: The height of the tree starting at @node
+ */
+static size_t checkHeight(const binary_tree_t *tree)
+{
+	size_t h_left;
+	size_t h_right;
+
+	h_left = tree->left ? 1 + checkHeight(tree->left) : 0;
+	h_right = tree->right ? 1 + checkHeight(tree->right) : 0;
+	return (h_left > h_right ? h_left : h_right);
+}
+
+/**
+ * preorderTraversal - goes through a binary tree
+ *                     using pre-order traversal
+ * @root: pointer root of the tree
+ * @node: pointer node in the tree
+ * @h: height of tree
+ * @l: layer on the tree
  **/
-heap_t *get_node(heap_t *root, int size)
+void preorderTraversal(heap_t *root, heap_t **node, size_t h, size_t l)
 {
-	int idx, mask  = 0;
-
-	for (; 1 << (idx + 1) <= size; idx++)
-		;
-	for (idx--; idx >= 0; idx--)
-	{
-		mask = 1 << idx;
-		if (size & mask)
-			root = root->right;
-		else
-			root = root->left;
-	}
-	return (root);
+	if (!root)
+		return;
+	if (h == l)
+		*node = root;
+	l++;
+	if (root->left)
+		preorderTraversal(root->left, node, h, l);
+	if (root->right)
+		preorderTraversal(root->right, node, h, l);
 }
 
 /**
- * heapify - converts the tree into a max heap tree
- * @root: pointer to the root node
- */
-void heapify(heap_t *root)
+ * sort - binary tree Heap Sort
+ * @tmp: pointer to the heap root
+ * Return: pointer to last node
+ **/
+heap_t *sort(heap_t *tmp)
 {
-	heap_t *max;
-	int first = 0;
+	int n;
 
-    if (!root)
-	    return;
-	while (max || !first)
+	while (tmp->left || tmp->right)
 	{
-		max = NULL;
-		first = 1;
-		if (root->left && root->left->n > root->n)
-			max = root->left;
-		if (root->right && root->right->n > root->n &&
-				(max && root->right->n > max->n))
-			max = root->right;
-		if (max)
-			root = swap(max, root);
-	}
-}
-/**
- * heap_extract - extracts the root
- * @root: is a double pointer to the root
- * Return: the value stored in the root node, otherwise 0
- */
-int heap_extract(heap_t **root)
-{
-	int max = (*root)->n;
-	int size = get_tree_size(*root);
-	heap_t *last_node = get_node(*root, size);
+		if (!tmp->right || tmp->left->n > tmp->right->n)
+		{
+			n = tmp->n;
+			tmp->n = tmp->left->n;
+			tmp->left->n = n;
+			tmp = tmp->left;
+		}
+		else if (!tmp->left || tmp->left->n < tmp->right->n)
+		{
+			n = tmp->n;
+			tmp->n = tmp->right->n;
+			tmp->right->n = n;
+			tmp = tmp->right;
+		}
 
-	swap(last_node, *root);
-	if (last_node->parent->left == last_node)
-		last_node->parent->left = NULL;
+	}
+	return (tmp);
+}
+
+/**
+ * heap_extract - extracts the root node of a Max Binary Heap
+ * @root: double pointer to the root of the heap
+ * Return: the value stored in the root node, or 0.
+ */
+int extract(heap_t **root)
+{
+	int value;
+	heap_t *tmp, *node;
+
+	if (!root || !*root)
+		return (0);
+	tmp = *root;
+	value = tmp->n;
+	if (!tmp->left && !tmp->right)
+	{
+		*root = NULL;
+		free(tmp);
+		return (value);
+	}
+	preorderTraversal(tmp, &node, checkHeight(tmp), 0);
+	tmp = sort(tmp);
+	tmp->n = node->n;
+	if (node->parent->right)
+		node->parent->right = NULL;
 	else
-		last_node->parent->right = NULL;
-	free(last_node);
-	heapify(*root);
-	return (max);
+		node->parent->left = NULL;
+	free(node);
+	return (value);
 }
