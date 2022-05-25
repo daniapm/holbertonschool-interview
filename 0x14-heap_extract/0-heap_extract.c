@@ -1,101 +1,139 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "binary_trees.h"
+
 /**
- * checkHeight - Check the height of a binary tree
- * @tree: Pointer to the node to measures the height
+ * height_tr - height of a binary tree
+ * @tree: pointer to the root node of the tree to measure the height
  *
- * Return: The height of the tree starting at @node
+ * Return: Height or 0 if tree is NULL
  */
-static size_t checkHeight(const binary_tree_t *tree)
+size_t height_tr(const heap_t *tree)
 {
-	size_t h_left;
-	size_t h_right;
+	size_t height_l = 0;
+	size_t height_r = 0;
 
-	h_left = tree->left ? 1 + checkHeight(tree->left) : 0;
-	h_right = tree->right ? 1 + checkHeight(tree->right) : 0;
-	return (h_left > h_right ? h_left : h_right);
+	if (!tree)
+		return (0);
+
+	if (tree->left)
+		height_l = 1 + height_tr(tree->left);
+
+	if (tree->right)
+		height_r = 1 + height_tr(tree->right);
+
+	if (height_l > height_r)
+		return (height_l);
+	return (height_r);
+}
+/**
+ * size_tr - sum of heights of a binary tree
+ * @tree: pointer to the root node of the tree to measure the height
+ *
+ * Return: Height or 0 if tree is NULL
+ */
+size_t size_tr(const binary_tree_t *tree)
+{
+	size_t height_l = 0;
+	size_t height_r = 0;
+
+	if (!tree)
+		return (0);
+
+	if (tree->left)
+		height_l = 1 + size_tr(tree->left);
+
+	if (tree->right)
+		height_r = 1 + size_tr(tree->right);
+
+	return (height_l + height_r);
 }
 
 /**
- * preorderTraversal - goes through a binary tree
- *                     using pre-order traversal
- * @root: pointer root of the tree
- * @node: pointer node in the tree
- * @h: height of tree
- * @l: layer on the tree
- **/
-void preorderTraversal(heap_t *root, heap_t **node, size_t h, size_t l)
+ * order_by - pre-order traversal
+ * @tree: pointer to the root node of the tree to traverse
+ * @node: will be last note in traverse
+ * @height: height of tree
+ *
+ * Return: No Return
+ */
+void order_by(heap_t *tree, heap_t **node, size_t height)
 {
-	if (!root)
+	if (!tree)
 		return;
-	if (h == l)
-		*node = root;
-	l++;
-	if (root->left)
-		preorderTraversal(root->left, node, h, l);
-	if (root->right)
-		preorderTraversal(root->right, node, h, l);
+
+	if (!height)
+		*node = tree;
+	height--;
+
+	order_by(tree->left, node, height);
+	order_by(tree->right, node, height);
 }
 
 /**
- * sort - binary tree Heap Sort
- * @tmp: pointer to the heap root
- * Return: pointer to last node
- **/
-heap_t *sort(heap_t *tmp)
-{
-	int n;
-
-	while (tmp->left || tmp->right)
-	{
-		if (!tmp->right || tmp->left->n > tmp->right->n)
-		{
-			n = tmp->n;
-			tmp->n = tmp->left->n;
-			tmp->left->n = n;
-			tmp = tmp->left;
-		}
-		else if (!tmp->left || tmp->left->n < tmp->right->n)
-		{
-			n = tmp->n;
-			tmp->n = tmp->right->n;
-			tmp->right->n = n;
-			tmp = tmp->right;
-		}
-
-	}
-	return (tmp);
-}
-
-/**
- * heap_extract - extracts the root node of a Max Binary Heap
- * @root: double pointer to the root of the heap
- * Return: the value stored in the root node, or 0.
+ * heapify - heapifies max binary heap
+ * @root: pointer to binary heap
  */
-int extract(heap_t **root)
+void heapify(heap_t *root)
 {
 	int value;
-	heap_t *tmp, *node;
+	heap_t *tmp1, *tmp2;
+
+	if (!root)
+		return;
+
+	tmp1 = root;
+
+	while (1)
+	{
+		if (!tmp1->left)
+			break;
+		if (!tmp1->right)
+			tmp2 = tmp1->left;
+		else
+		{
+			if (tmp1->left->n > tmp1->right->n)
+				tmp2 = tmp1->left;
+			else
+				tmp2 = tmp1->right;
+		}
+		if (tmp1->n > tmp2->n)
+			break;
+		value = tmp1->n;
+		tmp1->n = tmp2->n;
+		tmp2->n = value;
+		tmp1 = tmp2;
+	}
+}
+
+/**
+ * heap_extract - extracts the root node from a Max Binary Heap
+ * @root: pointer to the heap root
+ * Return: value of extracted node
+ **/
+int heap_extract(heap_t **root)
+{
+	int value;
+	heap_t *heap_r, *node;
 
 	if (!root || !*root)
 		return (0);
-	tmp = *root;
-	value = tmp->n;
-	if (!tmp->left && !tmp->right)
+	heap_r = *root;
+	value = heap_r->n;
+	if (!heap_r->left && !heap_r->right)
 	{
 		*root = NULL;
-		free(tmp);
+		free(heap_r);
 		return (value);
 	}
-	preorderTraversal(tmp, &node, checkHeight(tmp), 0);
-	tmp = sort(tmp);
-	tmp->n = node->n;
+
+	order_by(heap_r, &node, height_tr(heap_r));
+
+	heap_r->n = node->n;
 	if (node->parent->right)
 		node->parent->right = NULL;
 	else
 		node->parent->left = NULL;
 	free(node);
+	heapify(heap_r);
+	*root = heap_r;
 	return (value);
 }
