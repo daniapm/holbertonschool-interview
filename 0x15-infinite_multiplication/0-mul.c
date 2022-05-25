@@ -1,94 +1,89 @@
 #include "holberton.h"
-
 /**
- * is_number - checks if the argument is a number
- * @c: argument
- * Return: 0 on success, otherwise 1
- **/
-int is_number(char *c)
+ * numeric_s - checks if string is number
+ *
+ * @s: string
+ *
+ * Return: 1 if number, 0 if not
+ */
+int numeric_s(char *s)
 {
-	while (*c)
+	int i, check, d;
+
+	d = 0, check = 1;
+	for (i = 0; *(s + i) != 0; i++)
 	{
-		if (*c < '0' || *c > '9')
-			return (0);
-		c++;
-	}
-	return (1);
-}
-
-/**
- * leng_string - find the length of the a string
- * @s: a string
- * Return: the length of the string
- **/
-int leng_string(char *s)
-{
-	char *ptr = s;
-
-	while (*s)
-		s++;
-	return (s - ptr);
-}
-
-/**
- * multiply - program that multiplies two positive number
- * @a: first number
- * @b: second number
- * Return: Nothing
- **/
-void multiply(char *a, char *b)
-{
-	int i, len_a, len_b, total, a_number, b_number, res = 0, tmp;
-	int *ptr;
-
-	len_a = leng_string(a);
-	len_b = leng_string(b);
-	tmp = len_b;
-	total = len_a + len_b;
-	ptr = malloc(sizeof(int) * total);
-	if (!ptr)
-		return;
-	for (len_a--; len_a >= 0; len_a--)
-	{
-		a_number = a[len_a] - '0';
-		res = 0;
-		len_b = tmp;
-		for (len_b--; len_b >= 0; len_b--)
+		d = isdigit(*(s + i));
+		if (d == 0)
 		{
-			b_number = b[len_b] - '0';
-			res += ptr[len_b + len_a + 1] + (a_number * b_number);
-			ptr[len_a + len_b + 1] = res % 10;
-			res /= 10;
+			check = 0;
+			break;
 		}
-		if (res)
-			ptr[len_a + len_b + 1] = res % 10;
 	}
-	while (*ptr == 0)
-	{
-		ptr++;
-		total--;
-	}
-	for (i = 0; i < total; i++)
-		printf("%i", ptr[i]);
-	printf("\n");
+	return (check);
 }
 
 /**
- * main - Entry point, program that multiplies two positive numbers
- * @argc: argument count
- * @argv: argument values
- * Return: 0 on success
- **/
-int main(int argc, char *argv[])
+ * fre_memory - reserves memory initialized to 0
+ *
+ * @nmemb: # of bytes
+ *
+ * Return: pointer
+ */
+char *fre_memory(unsigned int nmemb)
 {
-	char *num1 = argv[1];
-	char *num2 = argv[2];
+	unsigned int i;
+	char *p;
 
-	if (argc != 3 || !is_number(num1) || !is_number(num2))
+	p = malloc(nmemb + 1);
+	if (p == 0)
+		return (0);
+	for (i = 0; i < nmemb; i++)
+		p[i] = '0';
+	p[i] = '\0';
+	return (p);
+}
+
+/**
+ * main - multiplies inf numbers
+ *
+ * @argc: # of cmd line args
+ * @argv: cmd line args
+ * Return: No return
+ */
+int main(int argc, char **argv)
+{
+	int i, j, l1, l2, lful, mul, add, ten, ten2, tl, zer = 0;
+	char *res;
+
+	if (argc != 3 || numeric_s(argv[1]) == 0 || numeric_s(argv[2]) == 0)
+		printf("Error\n"), exit(98);
+	if (atoi(argv[1]) == 0 || atoi(argv[2]) == 0)
+		printf("0\n"), exit(0);
+	l1 = strlen(argv[1]), l2 = strlen(argv[2]);
+	lful = l1 + l2;
+	res = fre_memory(lful);
+	if (res == 0)
+		printf("Error\n"), exit(98);
+	for (i = l2 - 1; i >= 0; i--)
 	{
-		printf("Error\n");
-		exit(98);
+		ten = 0, ten2 = 0;
+		for (j = l1 - 1; j >= 0; j--)
+		{
+			tl = i + j + 1;
+			mul = (argv[1][j] - '0') * (argv[2][i] - '0') + ten;
+			ten = mul / 10;
+			add = (res[tl] - '0') + (mul % 10) + ten2;
+			ten2 = add / 10;
+			res[tl] = (add % 10) + '0';
+		}
+		res[tl - 1] = (ten + ten2) + '0';
 	}
-	multiply(num1, num2);
+	if (res[0] == '0')
+		zer = 1;
+	for (; zer < lful; zer++)
+		printf("%c", res[zer]);
+	printf("\n");
+	free(res);
 	return (0);
 }
