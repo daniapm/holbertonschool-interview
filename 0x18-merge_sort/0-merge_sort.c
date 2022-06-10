@@ -1,7 +1,7 @@
 #include "sort.h"
 
 /**
- * merge_sort - sorts an array of integers in ascending order using the Merge Sort
+ * merge_sort - sorts an array of ints using top-down merge sort algorithm
  * @array: array of integers to sort
  * @size: size of the array of integers to sort
  *
@@ -9,21 +9,22 @@
 
 void merge_sort(int *array, size_t size)
 {
-	int *merge_h = malloc(sizeof(int) * size);
+	int *holder = malloc(sizeof(int) * size);
 
-	if (merge_h == NULL)
+	if (holder == NULL)
 		return;
 	if (size <= 1 || array == NULL)
 	{
-		free(merge_h);
+		free(holder);
 		return;
 	}
-	merge_holder(array, size, merge_h);
-	free(merge_h);
+	merge_holder(array, size, holder);
+	free(holder);
 }
 
 /**
- * merge_holder - sorts array of ints with top-down
+ * merge_holder - sorts array of ints with top-down merge sort algorithm
+ * and includes malloced holder array
  * @array: array of integers to sort
  * @size: size of the array of integers to sort
  * @holder: temp array to hold information during merge
@@ -31,14 +32,14 @@ void merge_sort(int *array, size_t size)
 
 void merge_holder(int *array, size_t size, int *holder)
 {
-	int size_m = size / 2;
+	int mid = size / 2;
 
 	if (size <= 1)
 		return;
 
-	merge_holder(array, size_m, holder);
-	merge_holder(&array[size_m], size - size_m, holder);
-	merge(holder, array, size_m, size);
+	merge_holder(array, mid, holder);
+	merge_holder(&array[mid], size - mid, holder);
+	merge(holder, array, mid, size);
 }
 
 /**
