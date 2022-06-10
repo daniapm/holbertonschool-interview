@@ -24,7 +24,6 @@ void merge_sort(int *array, size_t size)
 
 /**
  * merge_holder - sorts array of ints with top-down
- * and includes malloced holder array
  * @array: array of integers to sort
  * @size: size of the array of integers to sort
  * @holder: temp array to hold information during merge
