@@ -1,9 +1,9 @@
 #include "holberton.h"
 
 /**
-* wildcmp - compares two strings using recursion
-* @s1: is a pointer to first string
-* @s2: is a pointer to second string
+* wildcmp - compares two strings
+* @s1: pointer to first string
+* @s2: pointer to second string
 * Return: 1 if the strings can be considered identical, otherwise return 0
 */
 
